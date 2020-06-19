@@ -25,18 +25,24 @@ SECRET_KEY = 'qk3jsm!e@hzpe5723e8!71mcgq5g^oe#jwr^guvhv9u$9#t$jh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.27', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'settings.apps.SettingsConfig',
+    'monedas.apps.MonedasConfig',
+    'permisos.apps.PermisosConfig',
+    'status.apps.StatusConfig',
+    'pages.apps.PagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +60,7 @@ ROOT_URLCONF = 'sindicatos.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +81,12 @@ WSGI_APPLICATION = 'sindicatos.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sindicatos_python',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -103,13 +113,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
+DECIMAL_SEPARATOR = '.'
 
 USE_TZ = True
 
@@ -117,4 +129,60 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'sindicatos/static')
+]
+
+# media folders settings
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
+
+# proceso recpuerar contraseña email, link por consola porque no envia mails trabajando local
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# system settings
+PERIODO_INI_SYSTEM = '201801'
+
+# modulos
+MOD_COBRANZA = 1
+MOD_LECTURAS = 2
+MOD_ASIGNAR_COBROS_MANUALES = 3
+MOD_SOCIOS = 4
+MOD_INICIAR_CAJA = 5
+MOD_INICIAR_CAJA_RECIBIR = 6
+MOD_ENTREGAR_CAJA = 7
+MOD_ENTREGAR_CAJA_RECIBIR = 8
+MOD_CAJAS_INGRESOS = 9
+MOD_CAJAS_EGRESOS = 10
+MOD_USUARIOS = 11
+MOD_COBROS_MANUALES = 12
+MOD_COBROS_MENSUALES = 13
+MOD_ZONAS = 14
+MOD_CONFIGURACIONES_SISTEMA = 15
+MOD_CORREGIR_LECTURA = 16
+MOD_TABLAS_BACKUP = 17
+MOD_REPORTES = 18
+
+# STATUS
+STATUS_ACTIVO = 1
+STATUS_INACTIVO = 2
+STATUS_ELIMINADO = 3
+STATUS_APERTURA = 4
+STATUS_APERTURA_RECIBE = 5
+STATUS_CIERRE = 6
+STATUS_CIERRE_RECIBE = 7
+STATUS_ANULADO = 8
+STATUS_PASIVO = 9
+STATUS_COBRADO = 10
+STATUS_NO_APERTURADO = 11
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}

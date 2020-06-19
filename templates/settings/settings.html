@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} | Configuraciones Sistema {% endblock %}
+
+{% block content %}
+
+<script src="{% static 'js/modulo_settings.js' %}" type="text/javascript"></script>
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        <!-- <div id="message" class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h5><i class="icon fas fa-check"></i> Configuraciones!</h5>
+            Datos Guardados Correctamente
+        </div> -->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="tabla w-100">
+                <tr class="tr_content">
+                    <td class="w-100" colspan="4">
+                        <div class="card-primary">
+                            <div class="card-header td_head center h-40">
+                                Configuraciones
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td class="td_content right w-20">
+                        Empresa&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="td_content left w-80">
+                        <input type="text" class="form-control input w-90" name="empresa" value="{{settings.empresa}}">
+                    </td>
+                </tr>
+
+                <tr class="tr_content2">
+                    <td class="td_content right w-20">
+                        Direcci&oacute;n&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="td_content left w-80">
+                        <input type="text" class="form-control input w-90" name="direccion" value="{{settings.direccion}}">
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td class="td_content right w-20">
+                        Ciudad&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="td_content left w-80">
+                        <input type="text" class="form-control input w-90" name="ciudad" value="{{settings.ciudad}}">
+                    </td>
+                </tr>
+
+                <tr class="tr_content2">
+                    <td class="td_content right w-20">
+                        <span id="label1">Telefonos</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label1_c" value="Fonos">
+                    </td>
+                    <td colspan="3" class="td_content left w-80">
+                        <input type="text" class="form-control input w-90" name="telefonos" value="{{settings.telefonos}}">
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td class="td_content right w-20">
+                        Actividad&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="td_content left w-80">
+                        <input type="text" class="form-control input w-90" name="actividad" value="{{settings.actividad}}">
+                    </td>
+                </tr>
+
+                <tr class="tr_content2">
+                    <td class="td_content right w-20">
+                        <span id="label2">Fecha Servidor</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label2_c" value="Fecha Serv.">
+                    </td>
+                    <td class="td_content left w-30">
+                        <select name="usar_fecha_servidor" class="form-control input w-80 h-28">
+                            <option value="si" {% if settings.usar_fecha_servidor == "si" %}selected{% endif %}>SI
+                            </option>
+                            <option value="no" {% if settings.usar_fecha_servidor == "no" %}selected{% endif %}>NO
+                            </option>
+                        </select>
+                    </td>
+                    <td class="td_content right w-20">
+                        <span id="label3">Fecha Sistema</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label3_c" value="F. Sist.">
+                    </td>
+                    <td class="td_content left w-30">
+                        <input name="fecha_sistema" id="fecha_sistema" value="{{settings.fecha_sistema|date:'d-M-Y'}}" type="text" class="form-control input w-90 left" readonly="readonly">
+                        <script type="text/javascript">
+                            var foopicker = new FooPicker({
+                                id: 'fecha_sistema',
+                                dateFormat: 'dd-MMM-yyyy'
+                            });
+                        </script>
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td class="td_content right w-20">
+                        Cant./Pagina&nbsp;:&nbsp;
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" class="form-control input right w-70" name="cant_per_page" value="{{settings.cant_per_page}}" onkeyup="validarNumero(this);">
+                    </td>
+                    <td class="td_content right w-20">
+                        <span id="label4">Lista Cobros</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label4_c" value="L. Cobr.">
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" class="form-control input right w-70" name="cant_lista_cobranza" value="{{settings.cant_lista_cobranza}}" onkeyup="validarNumero(this);">
+                    </td>
+                </tr>
+
+                <tr class="tr_content2">
+                    <td class="td_content right w-20">
+                        Costo M3&nbsp;:&nbsp;
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" class="form-control input right w-70" name="costo_m3" value="{{settings.costo_m3|floatformat:2}}" onkeyup="validarNumeroPunto(this);">
+                    </td>
+                    <td class="td_content right w-20">
+                        <span id="label5">Costo Minimo</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label5_c" value="Cto. Min.">
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" class="form-control input right w-70" name="costo_minimo" value="{{settings.costo_minimo}}" onkeyup="validarNumeroPunto(this);">
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td class="td_content right w-20">
+                        <span id="label6">Unidad Min M3</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label6_c" value="Und. Min M3">
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" class="form-control input right w-70" name="unidad_minima_m3" value="{{settings.unidad_minima_m3}}" onkeyup="validarNumeroPunto(this);">
+                    </td>
+                    <td class="td_content right w-20">
+                        <span id="label7">Multa Pasivo</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label7_c" value="M. Psvo.">
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" class="form-control input right w-70" name="multa_pasivo" value="{{settings.multa_pasivo}}" onkeyup="validarNumeroPunto(this);">
+                    </td>
+                </tr>
+
+                <tr class="tr_content2">
+                    <td class="td_content right w-20">
+                        <span id="label8">Periodo Inicial</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label8_c" value="Prdo. Ini.">
+                    </td>
+                    <td class="td_content left w-30">
+                        <select name="periodo_ini" class="form-control input w-80">
+                            {% for periodo in periodos %}
+                            <option value="{{periodo}}" {% if periodo == settings.periodo_ini %}selected{% endif %}>{{periodo}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="td_content right w-20">
+                        <span id="label9">Periodo Final</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label9_c" value="Prdo Fin">
+                    </td>
+                    <td class="td_content left w-30">
+                        <select name="periodo_fin" class="form-control input w-80">
+                            {% for periodo in periodos %}
+                            <option value="{{periodo}}" {% if periodo == settings.periodo_fin %}selected{% endif %}>{{periodo}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td colspan="4" class="td_content center w-100">
+                        &nbsp;
+                    </td>
+                </tr>
+
+                {% if permisos.modificar %}
+                <tr class="tr_content">
+                    <td colspan="4" class="td_content center w-100">
+                        <input type="button" name="add_button" value="Guardar" class="btn btn-primary" onclick="confirmarGuardarSettings();">&nbsp;
+                        <input type="hidden" name="guardar_datos_x" value="acc">
+                        <input type="hidden" name="button_cancel" value="acc">
+                        <input type="hidden" id="st_anio_inicio" value="2019">
+                    </td>
+                </tr>
+                {% endif %}
+            </table>
+        </form>
+        <br>
+
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<BR><BR>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %} | Zonas {% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        <form name="search" method="post" action="{$window_acc}">
+            <table class="tabla w-100">
+                <tr class="tr_head center">
+                    <td class="td_head" colspan="4">Opciones de B&uacute;squeda</td>
+                </tr>
+
+                {% for zona in zonas %}
+                <tr class="tr_content">
+                    <td class="td_content right w-20">
+                        Zona&nbsp;:&nbsp;{{zona.zona}}
+                    </td>
+                    <td class="td_content left w-30">
+                        <input type="text" name="{$variable}" class="input w-80" value="{$variableVal}" autocomplete="off">
+                    </td>
+                    <td class="td_content right w-20">
+                        &nbsp;
+                    </td>
+                    <td class="td_content left w-30">
+                        &nbsp;
+                    </td>
+                </tr>
+                {% endfor %}
+
+                <tr class="tr_content">
+                    <td colspan="4" class="td_content center w-100">
+                        <input type="submit" name="search_button" value="Buscar" class="btn">
+                        <input type="hidden" name="search_button_x" value="acc">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br>
+        <!--paginacion-->
+        {assign var="pagina_actual" value=$variablePageVal}
+        {assign var="pagina_field" value=$variable_page}
+        {include file="$ruta_paginacion"}
+
+        {if $permisosOperacion.adicionar==1}
+        <form name="adicion_top" method="post" action="{$window_acc}">
+            <table class="tabla w-100">
+                <td class="td_content left w-100">
+                    <input type="submit" name="add" value="Nueva Zona" class="btn">
+                </td>
+            </table>
+        </form>
+        <br>
+        {/if}
+
+        <table class="tabla w-100">
+            <tr class="tr_head">
+                {assign var="dato_columna" value=$columna}
+                <td colspan="3" class="td_head w-100 pointer" {include file="$ruta_cabecera_columna" }>
+                    Zona{include file="$ruta_titulo_columna"}
+                </td>
+            </tr>
+            {assign var="backclass" value=""}
+            {section name=list loop=$ids_window}
+            {assign var="idW" value=$ids_window[list.index]}
+            {if ($smarty.section.list.index % 2) == 0 }
+            {assign var="backclass" value="2"}
+            {else}
+            {assign var="backclass" value=""}
+            {/if}
+            <tr class="tr_content{$backclass}">
+                <td class="td_content left w-80">
+                    {$zona[list.index]}
+                </td>
+                <td class="td_content center w-10">
+                    {if $permisosOperacion.modificar==1}
+                    {assign var="tituloOv" value="Modificar"}
+                    {assign var="detalleOv" value="Modificar este cliente"}
+                    {assign var="urlData" value="$window_acc&modify=acc&id=$idW"}
+                    {assign var="urlImg" value="modify.png"}
+                    {include file="$ruta_overlib"}
+                    {else} &nbsp; {/if}
+                </td>
+                <td class="td_content center w-10">
+                    {if $permisosOperacion.eliminar==1}
+                    {assign var="tituloOv" value="Eliminar"}
+                    {assign var="detalleOv" value="Eliminar este cliente"}
+                    {assign var="urlData" value="$window_acc&remove=acc&id=$idW"}
+                    {assign var="urlImg" value="delete.png"}
+                    {include file="$ruta_overlib"}
+                    {else} &nbsp; {/if}
+                </td>
+            </tr>
+            {/section}
+        </table>
+        <br>
+        {if $permisosOperacion.adicionar==1}
+        <form name="adicion" method="post" action="{$window_acc}">
+            <table class="tabla w-100">
+                <td class="td_content left w-100">
+                    <input type="submit" name="add" value="Nueva Zona" class="btn">
+                </td>
+            </table>
+        </form>
+        <br>
+        {/if}
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<BR><BR>
+<form name="form_order" method="post" action="{$window_acc}">
+    <input type="hidden" name="{$order_field}" value="{$order_field_value}">
+    <input type="hidden" name="{$order_type}" value="{$order_type_value}">
+    <input type="hidden" name="chapter" value="{$name_chapter}">
+</form>
+</div>
+
+{% endblock %}
