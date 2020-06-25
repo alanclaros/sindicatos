@@ -1,0 +1,8 @@
+{% load static %}
+<!-- <a href="{{url_main}}{{url_id}}/?delete_x=acc" onMouseOver=" overlib('Eliminar este elemento',CAPTION,'Eliminar',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true"
+    {% if target != '' %}target="{{target}}" {% endif %}>
+    <img src="{% static 'img/png/delete.png' %}" class="ico_img" border="0">
+</a> -->
+<img src="{% static 'img/png/delete.png' %}" class="ico_img pointer"
+    onclick="document.form_operation.operation_x.value='delete';document.form_operation.id.value='{{url_id}}';document.form_operation.submit();"
+    onMouseOver=" overlib('Eliminar este elemento',CAPTION,'Eliminar',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true" border="0">

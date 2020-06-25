@@ -34,6 +34,12 @@ class ValoresDefecto(object):
         self.pages_limit_botton = 0
         self.pages_limit_top = 0
 
+        # control del formulario
+        self.control_form = ""
+
+        # error en las operaciones
+        self.error_operation = ""
+
         # sesiones
         self.modulo_session = "unknow"
 
@@ -114,6 +120,7 @@ class ValoresDefecto(object):
         # self.variable_page_val = request.session[self.modulo_session][self.variable_page]
 
         # varibles de session sin iniciar
+        #print(request.session.keys(), '...', self.modulo_session)
         if not self.modulo_session in request.session.keys():
             request.session[self.modulo_session] = {}
             request.session[self.modulo_session][self.variable] = self.variable_defecto
@@ -161,16 +168,26 @@ class ValoresDefecto(object):
 
         # si realiza alguna busqueda
         if 'search_button_x' in request.POST.keys():
-            request.session[self.modulo_session][self.variable] = request.POST[self.variable]
-            request.session[self.modulo_session][self.variable2] = request.POST[self.variable2]
-            request.session[self.modulo_session][self.variable3] = request.POST[self.variable3]
-            request.session[self.modulo_session][self.variable4] = request.POST[self.variable4]
-            request.session[self.modulo_session][self.variable5] = request.POST[self.variable5]
-            request.session[self.modulo_session][self.variable6] = request.POST[self.variable6]
-            request.session[self.modulo_session][self.variable7] = request.POST[self.variable7]
-            request.session[self.modulo_session][self.variable8] = request.POST[self.variable8]
-            request.session[self.modulo_session][self.variable9] = request.POST[self.variable9]
-            request.session[self.modulo_session][self.variable10] = request.POST[self.variable10]
+            if self.variable.strip() != '':
+                request.session[self.modulo_session][self.variable] = request.POST[self.variable]
+            if self.variable2.strip() != '':
+                request.session[self.modulo_session][self.variable2] = request.POST[self.variable2]
+            if self.variable3.strip() != '':
+                request.session[self.modulo_session][self.variable3] = request.POST[self.variable3]
+            if self.variable4.strip() != '':
+                request.session[self.modulo_session][self.variable4] = request.POST[self.variable4]
+            if self.variable5.strip() != '':
+                request.session[self.modulo_session][self.variable5] = request.POST[self.variable5]
+            if self.variable6.strip() != '':
+                request.session[self.modulo_session][self.variable6] = request.POST[self.variable6]
+            if self.variable7.strip() != '':
+                request.session[self.modulo_session][self.variable7] = request.POST[self.variable7]
+            if self.variable8.strip() != '':
+                request.session[self.modulo_session][self.variable8] = request.POST[self.variable8]
+            if self.variable9.strip() != '':
+                request.session[self.modulo_session][self.variable9] = request.POST[self.variable9]
+            if self.variable10.strip() != '':
+                request.session[self.modulo_session][self.variable10] = request.POST[self.variable10]
             # pagina
             request.session[self.modulo_session][self.variable_page] = self.variable_page_defecto
 
@@ -201,6 +218,9 @@ class ValoresDefecto(object):
         self.variable_order_value = request.session[self.modulo_session][self.variable_order]
         self.variable_order_type_value = request.session[self.modulo_session][self.variable_order_type]
 
+        # importante establecer que la session se modifico para cuando se vuelva al modulo mantenga los datos
+        request.session.modified = True
+
         # session de orden
         # $smarty -> assign('order_field', $variableOrder)
         # $smarty -> assign('order_type', $variableOrderType)
@@ -225,7 +245,39 @@ class ValoresDefecto(object):
         self.pages_limit_top = self.pages_limit_botton + cant_per_page
 
     def getLista(self):
+        # orden
+        #print(self.variable_order_value, self.variable_order_type_value)
+        orden_enviar = ''
+        if self.variable_order_value != '':
+            orden_enviar = self.variable_order_value
+            if self.variable_order_type_value != '':
+                if self.variable_order_type_value == 'DESC':
+                    orden_enviar = '-' + orden_enviar
+        # print(orden_enviar)
+
         modelo = apps.get_model(self.modelo_app, self.modelo_name)
-        retorno = modelo.objects.filter(**self.filtros_modulo)[self.pages_limit_botton:self.pages_limit_top]
+        retorno = modelo.objects.filter(**self.filtros_modulo).order_by(orden_enviar)[self.pages_limit_botton:self.pages_limit_top]
 
         return retorno
+
+    def add(self, request):
+        """agregar un elemento al modulo"""
+        pass
+
+    def modify(self, request, id):
+        """modificar un elemento"""
+        pass
+
+    def delete(self, request, id):
+        """eliminar un elemento"""
+        pass
+
+    def canDelete(self, id):
+        """verificando si se puede eliminar la tabla"""
+        pass
+
+    def isInDB(self, id, nuevo_valor):
+        """verificamos si existe el nuevo valor en la base de datos"""
+        """id-> en caso que se este modificando"""
+        """nuevo_valor-> columna de la base de datos"""
+        pass

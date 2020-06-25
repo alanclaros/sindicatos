@@ -230,7 +230,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview 
-                        {% if request.path == '/settings/settings/' or request.path == '/settings/usuarios/' or request.path == '/settings/cobros_manuales/' or request.path == '/settings/cobros_mensuales/' or request.path == '/settings/zonas/' %}
+                        {% if '/settings/' in request.path %}
                         menu-open
                         {% endif %}
                         ">
@@ -267,7 +267,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{% url 'zonas' %}" class="nav-link {% if '/settings/zonas/' == request.path %}active{% endif %}">
+                                    <a href="{% url 'zonas' %}" class="nav-link {% if '/zonas/' in request.path %}active{% endif %}">
                                         <i class="nav-icon fas fa-building"></i>
                                         <p>
                                             Zonas
@@ -377,6 +377,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{% static 'js/adminlte.min.js' %}"></script>
     <!--funciones propias-->
     <script src="{% static 'js/buttons.js' %}" type="text/javascript"></script>
+    <!--overlib-->
+    <script src="{% static 'js/overlib.js' %}" type="text/javascript"></script>
 </body>
 
 </html>

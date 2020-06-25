@@ -11,6 +11,9 @@ class Zonas(models.Model):
     updated_at = DateTimeFieldCustome(null=True, blank=True)
     deleted_at = DateTimeFieldCustome(null=True, blank=True)
 
+    # def restrictData(self, field):
+    #    campo= self.
+
     class Meta:
         db_table = 'zonas'
 

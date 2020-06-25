@@ -3,6 +3,10 @@ from django.shortcuts import render
 from permisos.models import Modulos, UsersModulos
 from settings.models import Settings
 
+from django.db.models.fields import CharField, DecimalField, IntegerField, BooleanField
+from utils.custome_dbtypes import DateTimeFieldCustome, DateFieldCustome
+from utils.fechas import get_date_from_db, get_datetime_from_db
+
 user_login_required = user_passes_test(
     # lambda user: True if user.email == 'email@email3.com2' else False, login_url='/')
     lambda user: verificar_permiso(user), login_url='/')
@@ -34,7 +38,10 @@ def verificar_permiso_usuario(user, modulo, operacion):
     # print(permiso)
     modulo_user = Modulos.objects.get(pk=modulo)
     #print(modulo_user, '\n')
-    user_modulo = UsersModulos.objects.get(user_id=user.id, modulo_id=modulo_user)
+    try:
+        user_modulo = UsersModulos.objects.get(user_id=user.id, modulo_id=modulo_user)
+    except UsersModulos.DoesNotExist:
+        user_modulo = None
     if user_modulo:
         if operacion == 'lista':
             if user_modulo.enabled:
@@ -78,5 +85,46 @@ def get_settings():
     #     retorno[attr] = value
     #     print("Attribute: " + str(attr or ""))
     #     print("Value: " + str(value or ""))
+
+    return retorno
+
+
+def get_restricciones_columna(modelo, request, instancia, *args):
+    """devuelve las restricciones segun el tipo de columna"""
+    retorno = {}
+    for arg in args:
+        columna = modelo._meta.get_field(arg)
+        if isinstance(columna, CharField):
+            retorno[arg] = 'maxlength="' + str(columna.max_length) + '" onkeyup="txtValid(this);" onblur="txtValid(this);" '
+            if request:
+                retorno[arg] += (' value="' + request.POST[arg].replace('"', '&quot;') + '"') + F' id="{arg}"' + F' name="{arg}"'
+            else:
+                print(arg, getattr(instancia, arg))
+                retorno[arg] += (' value="' + getattr(instancia, arg).replace('"', '&quot;') + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+        elif isinstance(columna, DecimalField):
+            retorno[arg] = 'onkeyup="validarNumeroPunto(this);"'
+            if request:
+                retorno[arg] += (' value="' + request.POST[arg] + '"') + F' id="{arg}"' + F' name="{arg}"'
+            else:
+                retorno[arg] += (' value="' + str(getattr(instancia, arg)) + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+        elif isinstance(columna, DateFieldCustome):
+            retorno[arg] = 'readonly="readonly"' + F' id="{arg}"' + F' name="{arg}"'
+            if request:
+                retorno[arg] += ' value="' + request.POST[arg] + '" '
+            else:
+                retorno[arg] += ' value="' + get_date_from_db(str(getattr(instancia, arg))) + '" '
+        elif isinstance(columna, DateTimeFieldCustome):
+            retorno[arg] = 'readonly="readonly"' + F' id="{arg}"' + F' name="{arg}"'
+            if request:
+                retorno[arg] += ' value="' + request.POST[arg] + '" '
+            else:
+                retorno[arg] += ' value="' + get_date_from_db(str(getattr(instancia, arg))) + '" '
+        elif isinstance(columna, BooleanField):
+            retorno[arg] = '' + F' id="{arg}"' + F' name="{arg}"'
+        elif isinstance(columna, IntegerField):
+            retorno[arg] = 'onkeyup="validarNumero(this)"'
+            retorno[arg] += (' value="' + str(getattr(instancia, arg)) + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+        else:
+            retorno[arg] = 'sin tipo'
 
     return retorno

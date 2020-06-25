@@ -36,6 +36,7 @@ function openModule(module) {
 
 //function send order
 function sendOrder(order, type, field_order, field_type) {
+	//alert(order); alert(type); alert(field_order); alert(field_type);
 	document.forms["form_order"].elements[field_order].value = order;
 	document.forms["form_order"].elements[field_type].value = type;
 	document.forms["form_order"].submit();
@@ -177,6 +178,7 @@ function verifyForm() {
 
 			if (tipoDato == "txt" && controlarDato == "S") {
 				if (tamValor == 0) {
+					txtValid(nombreCampo);
 					alert('Debe llenar este campo');
 					campoForm.focus();
 					return false;
@@ -190,6 +192,7 @@ function verifyForm() {
 
 			if (tipoDato == "cbo" && controlarDato == "S") {
 				if (valor == "0") {
+					cboValid(nombreCampo);
 					alert('Debe seleccionar un valor');
 					campoForm.focus();
 					return false;
@@ -197,7 +200,6 @@ function verifyForm() {
 			}
 		} //fin for
 	} // fin if tam>0
-
 	return controlModulo();
 }
 
@@ -558,4 +560,51 @@ function redondeo(numero, decimales) {
 	}
 
 	return resultado2;
+}
+
+/**cabeceras de columnas */
+/*function columna_show(columna) {
+	cabecera = document.getElementById(columna);
+	cabecera.style.visibility = "visible";
+}
+function columna_hidden(columna) {
+	cabecera = document.getElementById(columna);
+	cabecera.style.visibility = "hidden";
+}*/
+
+/**valida campos de texto
+ * mostrando rojo, si no lleno datos
+ */
+function txtValid(nombre) {
+	tipo = typeof (nombre);
+	if (tipo == 'object') {
+		campo = nombre;
+	}
+	if (tipo == "string") {
+		campo = document.getElementById(nombre);
+	}
+	clase = campo.className;
+	clase = clase.replace('is-invalid', '');
+	if (TrimDerecha(TrimIzquierda(campo.value)) == "") {
+		clase = clase + ' is-invalid';
+	}
+	clase = clase.replace('  ', ' ');
+	campo.className = clase;
+}
+
+function txtValid(nombre) {
+	tipo = typeof (nombre);
+	if (tipo == 'object') {
+		campo = nombre;
+	}
+	if (tipo == "string") {
+		campo = document.getElementById(nombre);
+	}
+	clase = campo.className;
+	clase = clase.replace('is-invalid', '');
+	if (TrimDerecha(TrimIzquierda(campo.value)) == "" || campo.value == "0") {
+		clase = clase + ' is-invalid';
+	}
+	clase = clase.replace('  ', ' ');
+	campo.className = clase;
 }

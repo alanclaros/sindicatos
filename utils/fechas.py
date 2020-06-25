@@ -47,6 +47,22 @@ def get_periodos(anio_final=datetime.now().year):
     return periodos
 
 
+def get_periodos_mostrar(periodos):
+    periodos_mostrar = []
+    for periodo in periodos:
+        periodos_mostrar.append(get_periodo_formato_mostrar(periodo))
+
+    return periodos_mostrar
+
+
+def get_periodo_formato_mostrar(periodo):
+    anio = periodo[0:4]
+    mes = periodo[4:6]
+    mes_3 = meses_2digitos[mes]
+
+    return mes_3 + '-' + anio
+
+
 def next_periodo(periodo):
     anio = int(periodo[0:4])
     mes = int(periodo[4:6])
@@ -78,5 +94,23 @@ def get_date_db(fecha):
         return anio+'-'+mes+'-'+dia
 
 
+def get_date_from_db(fecha):
+    anio = fecha[0:4]
+    mes = get_mes_3digitos(fecha[5:7])
+    dia = fecha[9:11]
+    return dia + '-' + mes + '-' + anio
+
+
+def get_datetime_from_db(fecha):
+    anio = fecha[0:4]
+    mes = get_mes_3digitos(fecha[5:7])
+    dia = fecha[9:11]
+    return dia + '-' + mes + '-' + anio + ' ' + fecha[11:19]
+
+
 def get_mes_2digitos(mes):
     return meses_3digitos.get(mes, 'error en mes')
+
+
+def get_mes_3digitos(mes):
+    return meses_2digitos.get(mes, 'error en mes')

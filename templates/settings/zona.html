@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load jinja_tags %}
+{% load static %}
+
+{% block title %} | {{operation_x}} Zona {% endblock %}
+
+{% block content %}
+<script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script>
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+
+        <!-- {if $error_message==1}
+        <div class="error center">
+            <br>
+            {$message_error}
+            <br>
+        </div>
+        <br>
+        {/if}
+
+        {if $can_delete=="no"}
+        <div class="error center">
+            <br>
+            NO SE PUEDE ELIMINAR ESTA ZONA, EXISTEN REGISTROS RELACIONADOS<BR>
+            CONSULTE CON EL ADMINISTRADOR
+            <br>
+        </div>
+        <br>
+        {/if} -->
+
+        <br>
+        <div class="link_blue right">
+            <a href="{{url_main}}" class="link_blue">Volver</a>
+        </div>
+        <br>
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        {% if operation_x == "add" %}Adicionar Zona{% endif %}
+                        {% if operation_x == "modify" %}Modificar Zona{% endif %}
+                        {% if operation_x == "delete" %}Eliminar Zona{% endif %}
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Zona&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input w-80" {% autoescape off %} {{db_tags.zona}} {% endautoescape %}>
+                    </td>
+                </tr>
+
+                <tr class="tr_content">
+                    <td colspan="4" class="td_content center w-100">&nbsp;</td>
+                </tr>
+                <tr class="tr_content">
+                    <td colspan="4" class="td_content center w-100">
+                        {% if operation_x == "add" %}
+                        <input type="button" name="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="mandarFormulario('formulario', 'add_button', 'button_cancel')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="add_x" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="cancelForm();">
+                        {% endif %}
+                        {% if operation_x == "modify" %}
+                        <input type="button" name="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="mandarFormulario('formulario', 'add_button', 'button_cancel')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="modify_x" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="cancelForm();">
+                        {% endif %}
+                        {% if operation_x == "delete" %}
+                        <input type="button" name="add_button" value="&nbsp;Eliminar&nbsp;" class="btn btn-primary btn-sm" onclick="confirmarEliminar();">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="delete_x" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="cancelForm();">
+                        {% endif %}
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_cancel" method="post" action="{{url_main}}">
+    {% csrf_token %}
+</form>
+{% endblock %}
