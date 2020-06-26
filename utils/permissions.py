@@ -99,31 +99,54 @@ def get_restricciones_columna(modelo, request, instancia, *args):
             if request:
                 retorno[arg] += (' value="' + request.POST[arg].replace('"', '&quot;') + '"') + F' id="{arg}"' + F' name="{arg}"'
             else:
-                print(arg, getattr(instancia, arg))
-                retorno[arg] += (' value="' + getattr(instancia, arg).replace('"', '&quot;') + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+                if instancia:
+                    retorno[arg] += (' value="' + getattr(instancia, arg).replace('"', '&quot;') + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+                else:
+                    retorno[arg] += F' value="" id="{arg}" name="{arg}" '
+
         elif isinstance(columna, DecimalField):
             retorno[arg] = 'onkeyup="validarNumeroPunto(this);"'
             if request:
                 retorno[arg] += (' value="' + request.POST[arg] + '"') + F' id="{arg}"' + F' name="{arg}"'
             else:
-                retorno[arg] += (' value="' + str(getattr(instancia, arg)) + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+                if instancia:
+                    retorno[arg] += (' value="' + str(getattr(instancia, arg)) + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+                else:
+                    retorno[arg] += F' value="" id="{arg}" name="{arg}" '
+
         elif isinstance(columna, DateFieldCustome):
-            retorno[arg] = 'readonly="readonly"' + F' id="{arg}"' + F' name="{arg}"'
+            retorno[arg] = 'readonly="readonly"' + F' id="{arg}"' + F' name="{arg}" '
             if request:
                 retorno[arg] += ' value="' + request.POST[arg] + '" '
             else:
-                retorno[arg] += ' value="' + get_date_from_db(str(getattr(instancia, arg))) + '" '
+                if instancia:
+                    retorno[arg] += ' value="' + get_date_from_db(str(getattr(instancia, arg))) + '" '
+                else:
+                    retorno[arg] += ' value="" '
+
         elif isinstance(columna, DateTimeFieldCustome):
             retorno[arg] = 'readonly="readonly"' + F' id="{arg}"' + F' name="{arg}"'
             if request:
                 retorno[arg] += ' value="' + request.POST[arg] + '" '
             else:
-                retorno[arg] += ' value="' + get_date_from_db(str(getattr(instancia, arg))) + '" '
+                if instancia:
+                    retorno[arg] += ' value="' + get_date_from_db(str(getattr(instancia, arg))) + '" '
+                else:
+                    retorno[arg] += ' value="" '
+
         elif isinstance(columna, BooleanField):
-            retorno[arg] = '' + F' id="{arg}"' + F' name="{arg}"'
+            retorno[arg] = '' + F' id="{arg}"' + F' name="{arg}" '
+
         elif isinstance(columna, IntegerField):
-            retorno[arg] = 'onkeyup="validarNumero(this)"'
-            retorno[arg] += (' value="' + str(getattr(instancia, arg)) + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}"'
+            retorno[arg] = 'onkeyup="validarNumero(this)" '
+            if request:
+                retorno[arg] += (' value="' + request.POST[arg] + '"') + F' id="{arg}"' + F' name="{arg}" '
+            else:
+                if instancia:
+                    retorno[arg] += (' value="' + str(getattr(instancia, arg)) + '"' if instancia else '') + F' id="{arg}"' + F' name="{arg}" '
+                else:
+                    retorno[arg] += F' value="" id="{arg}" name="{arg}" '
+
         else:
             retorno[arg] = 'sin tipo'
 

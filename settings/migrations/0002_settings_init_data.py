@@ -25,9 +25,10 @@ def load_data(apps, schema_editor):
     cobro_mensual = CobrosMensuales.objects.create(cobro_mensual_id=1, cobro_mensual='cuota mortorio', monto_bs='1.00', status_id=status_activo, created_at='now', updated_at='now')
     cobro_mensual.save()
 
-    punto1 = Puntos.objects.create(punto_id=1, punto='Punto 1', codigo='P1', status_id=status_activo, created_at='now', updated_at='now')
+    punto1 = Puntos.objects.create(punto_id=1, caja_id=1, punto='Punto 1', codigo='P1', impresora_reportes='', status_id=status_activo, created_at='now', updated_at='now')
     punto1.save()
 
+    punto1 = Puntos.objects.get(pk=1)
     caja1 = Cajas.objects.create(caja_id=1, punto_id=punto1, caja='caja1', codigo='C1', status_id=status_activo, created_at='now', updated_at='now')
     caja1.save()
 

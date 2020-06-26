@@ -31,6 +31,11 @@ ALLOWED_HOSTS = ['192.168.0.27', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'tmp_listado_mes.apps.TmpListadoMesConfig',
+    'tablas_backup.apps.TablasBackupConfig',
+    'lecturas.apps.LecturasConfig',
+    'socios.apps.SociosConfig',
+    'cajas.apps.CajasConfig',
     'settings.apps.SettingsConfig',
     'monedas.apps.MonedasConfig',
     'permisos.apps.PermisosConfig',
